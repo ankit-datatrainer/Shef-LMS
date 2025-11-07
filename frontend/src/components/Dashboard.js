@@ -11,6 +11,7 @@ const Dashboard = ({ user, onLogout }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedModule, setSelectedModule] = useState(1);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showHelpMenu, setShowHelpMenu] = useState(false);
 
   // Complete Course Curriculum - Cyber Security & Ethical Hacking
   const courseData = {
@@ -414,19 +415,35 @@ const Dashboard = ({ user, onLogout }) => {
             <span className="icon">✏️</span>
             <span>Practice</span>
           </button>
-          <button className="nav-item" title="Projects">
+          <button 
+            className={`nav-item ${activeSection === 'projects' ? 'active' : ''}`}
+            onClick={() => setActiveSection('projects')}
+            title="Projects"
+          >
             <span className="icon">�</span>
             <span>Projects</span>
           </button>
-          <button className="nav-item" title="Career">
+          <button 
+            className={`nav-item ${activeSection === 'career' ? 'active' : ''}`}
+            onClick={() => setActiveSection('career')}
+            title="Career"
+          >
             <span className="icon">🎯</span>
             <span>Career</span>
           </button>
-          <button className="nav-item" title="Mentorship">
+          <button 
+            className={`nav-item ${activeSection === 'mentorship' ? 'active' : ''}`}
+            onClick={() => setActiveSection('mentorship')}
+            title="Mentorship"
+          >
             <span className="icon">�</span>
             <span>Mentorship</span>
           </button>
-          <button className="nav-item" title="Job Board">
+          <button 
+            className={`nav-item ${activeSection === 'jobboard' ? 'active' : ''}`}
+            onClick={() => setActiveSection('jobboard')}
+            title="Job Board"
+          >
             <span className="icon">💼</span>
             <span>Job Board</span>
           </button>
@@ -473,7 +490,7 @@ const Dashboard = ({ user, onLogout }) => {
                   <div className="featured-buttons">
                     <button className="btn-primary">Explore Shef USA Program</button>
                     <button className="btn-secondary">Talk to Admissions Team</button>
-                    <button className="btn-tertiary">Visit Shef USA</button>
+                    <button className="btn-tertiary" onClick={() => window.open('https://shefusa.com/', '_blank')}>Visit Shef USA</button>
                   </div>
                 </div>
                 <div className="featured-image">
@@ -518,7 +535,7 @@ const Dashboard = ({ user, onLogout }) => {
                     <span className="progress-text">0%</span>
                   </div>
 
-                  <button className="btn-continue">Start Learning →</button>
+                  <button className="btn-continue" onClick={() => setActiveSection('courses')}>Start Learning →</button>
                 </div>
 
                 {/* Dashboard Walkthrough */}
@@ -836,19 +853,608 @@ const Dashboard = ({ user, onLogout }) => {
           {activeSection === 'activity' && (
             <div className="section">
               <div className="section-header">
-                <h2>Your Activity</h2>
+                <h2>Practice Cyber Security</h2>
+                <p className="section-subtitle">Hands-on labs and challenges to sharpen your hacking skills</p>
               </div>
-              <div className="activity-list">
-                {activities.map((activity) => (
-                  <div key={activity.id} className="activity-item">
-                    <div className="activity-icon">{activity.icon}</div>
-                    <div className="activity-content">
-                      <h4>{activity.title}</h4>
-                      <p>{activity.course}</p>
-                      <span className="activity-time">{activity.time}</span>
+
+              {/* Practice Security Challenges */}
+              <div className="practice-section">
+                <h3>Security Challenges</h3>
+                <div className="practice-assessments-grid">
+                  <div className="assessment-card">
+                    <div className="assessment-header">
+                      <div className="assessment-icon">🔐</div>
+                    </div>
+                    <div className="assessment-content">
+                      <h4>Network Security Challenges</h4>
+                      <p className="assessment-meta">8 Questions | 90 Min</p>
+                      <p className="assessment-desc">Test your network security skills with real-world scenarios</p>
+                      <button className="btn-start">Start now →</button>
                     </div>
                   </div>
-                ))}
+
+                  <div className="assessment-card">
+                    <div className="assessment-header">
+                      <div className="assessment-icon">🛡️</div>
+                    </div>
+                    <div className="assessment-content">
+                      <h4>Web Application Security Lab</h4>
+                      <p className="assessment-meta">6 Questions | 120 Min</p>
+                      <p className="assessment-desc">Exploit vulnerabilities in web applications</p>
+                      <button className="btn-start">Start now →</button>
+                    </div>
+                  </div>
+
+                  <div className="assessment-card">
+                    <div className="assessment-header">
+                      <div className="assessment-icon">⚔️</div>
+                    </div>
+                    <div className="assessment-content">
+                      <h4>CTF Challenges</h4>
+                      <p className="assessment-meta">10 Questions | 180 Min</p>
+                      <p className="assessment-desc">Capture the flag challenges for advanced hackers</p>
+                      <button className="btn-start">Start now →</button>
+                    </div>
+                  </div>
+
+                  <div className="assessment-card">
+                    <div className="assessment-header">
+                      <div className="assessment-icon">🔓</div>
+                    </div>
+                    <div className="assessment-content">
+                      <h4>Cryptography Lab</h4>
+                      <p className="assessment-meta">5 Questions | 60 Min</p>
+                      <p className="assessment-desc">Crack encryption and decode messages</p>
+                      <button className="btn-start">Start now →</button>
+                    </div>
+                  </div>
+
+                  <div className="assessment-card">
+                    <div className="assessment-header">
+                      <div className="assessment-icon">🎭</div>
+                    </div>
+                    <div className="assessment-content">
+                      <h4>Social Engineering Scenarios</h4>
+                      <p className="assessment-meta">7 Questions | 75 Min</p>
+                      <p className="assessment-desc">Master the art of social engineering attacks</p>
+                      <button className="btn-start">Start now →</button>
+                    </div>
+                  </div>
+
+                  <div className="assessment-card">
+                    <div className="assessment-header">
+                      <div className="assessment-icon">🔍</div>
+                    </div>
+                    <div className="assessment-content">
+                      <h4>Forensics Investigation</h4>
+                      <p className="assessment-meta">9 Questions | 150 Min</p>
+                      <p className="assessment-desc">Investigate digital crimes and analyze evidence</p>
+                      <button className="btn-start">Start now →</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Practice Quizzes */}
+              <div className="practice-section">
+                <h3>Certification Practice Tests</h3>
+                <div className="practice-assessments-grid">
+                  <div className="assessment-card">
+                    <div className="assessment-header">
+                      <div className="assessment-icon nn-icon">CEH</div>
+                    </div>
+                    <div className="assessment-content">
+                      <h4>CEH Mock Exam</h4>
+                      <p className="assessment-desc">125 Questions | 4 Hours</p>
+                      <button className="btn-start">Start now →</button>
+                    </div>
+                  </div>
+
+                  <div className="assessment-card">
+                    <div className="assessment-header">
+                      <div className="assessment-icon microsoft-icon">�</div>
+                    </div>
+                    <div className="assessment-content">
+                      <h4>CompTIA Security+ Practice Test</h4>
+                      <p className="assessment-desc">90 Questions | 90 Min</p>
+                      <button className="btn-start">Start now →</button>
+                    </div>
+                  </div>
+
+                  <div className="assessment-card">
+                    <div className="assessment-header">
+                      <div className="assessment-icon meta-icon">🌐</div>
+                    </div>
+                    <div className="assessment-content">
+                      <h4>OSCP Preparation Quiz</h4>
+                      <p className="assessment-desc">50 Questions | 120 Min</p>
+                      <button className="btn-start">Start now →</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeSection === 'projects' && (
+            <div className="section">
+              <div className="section-header">
+                <h2>Cyber Security Projects</h2>
+                <p className="section-subtitle">Build real-world projects to demonstrate your skills</p>
+              </div>
+
+              {/* Capstone Projects */}
+              <div className="projects-section">
+                <h3>Capstone Projects</h3>
+                <div className="capstone-projects-grid">
+                  <div className="capstone-card">
+                    <div className="capstone-icon" style={{ background: '#ffe6e6' }}>�</div>
+                    <h4>Enterprise Network Penetration Test</h4>
+                    <p className="capstone-course">End-to-End Security Assessment</p>
+                    <p className="project-desc">Conduct a full penetration test on a simulated enterprise network, identify vulnerabilities, and provide remediation recommendations.</p>
+                    <div className="project-meta">
+                      <span>⏱️ 4 weeks</span>
+                      <span>🎯 Advanced</span>
+                    </div>
+                    <button className="btn-start">Start Project →</button>
+                  </div>
+
+                  <div className="capstone-card">
+                    <div className="capstone-icon" style={{ background: '#fff0e6' }}>🌐</div>
+                    <h4>Web Application Security Audit</h4>
+                    <p className="capstone-course">OWASP Top 10 Vulnerability Assessment</p>
+                    <p className="project-desc">Audit a web application for OWASP Top 10 vulnerabilities and create a comprehensive security report.</p>
+                    <div className="project-meta">
+                      <span>⏱️ 3 weeks</span>
+                      <span>🎯 Intermediate</span>
+                    </div>
+                    <button className="btn-start">Start Project →</button>
+                  </div>
+
+                  <div className="capstone-card">
+                    <div className="capstone-icon" style={{ background: '#e6f0ff' }}>�️</div>
+                    <h4>Wireless Network Security Analysis</h4>
+                    <p className="capstone-course">Wi-Fi Penetration Testing & Security</p>
+                    <p className="project-desc">Analyze wireless network security, perform WPA2 cracking, and set up secure wireless infrastructure.</p>
+                    <div className="project-meta">
+                      <span>⏱️ 2 weeks</span>
+                      <span>🎯 Intermediate</span>
+                    </div>
+                    <button className="btn-start">Start Project →</button>
+                  </div>
+
+                  <div className="capstone-card">
+                    <div className="capstone-icon" style={{ background: '#e6ffe6' }}>🦠</div>
+                    <h4>Malware Analysis Lab</h4>
+                    <p className="capstone-course">Reverse Engineering & Detection</p>
+                    <p className="project-desc">Set up a malware analysis lab and reverse engineer malicious software to understand attack vectors.</p>
+                    <div className="project-meta">
+                      <span>⏱️ 3 weeks</span>
+                      <span>🎯 Advanced</span>
+                    </div>
+                    <button className="btn-start">Start Project →</button>
+                  </div>
+
+                  <div className="capstone-card">
+                    <div className="capstone-icon" style={{ background: '#f0e6ff' }}>☁️</div>
+                    <h4>Cloud Security Assessment</h4>
+                    <p className="capstone-course">AWS/Azure Security Audit</p>
+                    <p className="project-desc">Assess cloud infrastructure security, identify misconfigurations, and implement security best practices.</p>
+                    <div className="project-meta">
+                      <span>⏱️ 3 weeks</span>
+                      <span>🎯 Advanced</span>
+                    </div>
+                    <button className="btn-start">Start Project →</button>
+                  </div>
+
+                  <div className="capstone-card">
+                    <div className="capstone-icon" style={{ background: '#ffe6f0' }}>🔴</div>
+                    <h4>Red Team Operation</h4>
+                    <p className="capstone-course">Full-Scale Attack Simulation</p>
+                    <p className="project-desc">Execute a complete red team operation including reconnaissance, exploitation, and post-exploitation.</p>
+                    <div className="project-meta">
+                      <span>⏱️ 5 weeks</span>
+                      <span>🎯 Expert</span>
+                    </div>
+                    <button className="btn-start">Start Project →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeSection === 'career' && (
+            <div className="section">
+              <div className="section-header">
+                <h2>Career Development</h2>
+                <p className="section-subtitle">Launch your cybersecurity career with expert guidance</p>
+              </div>
+
+              {/* Career Resources */}
+              <div className="career-section">
+                <div className="career-stats">
+                  <div className="career-stat-card">
+                    <div className="stat-icon">💼</div>
+                    <h3>850+</h3>
+                    <p>Job Opportunities</p>
+                  </div>
+                  <div className="career-stat-card">
+                    <div className="stat-icon">🏢</div>
+                    <h3>200+</h3>
+                    <p>Hiring Partners</p>
+                  </div>
+                  <div className="career-stat-card">
+                    <div className="stat-icon">💰</div>
+                    <h3>$95K</h3>
+                    <p>Average Salary</p>
+                  </div>
+                  <div className="career-stat-card">
+                    <div className="stat-icon">📈</div>
+                    <h3>92%</h3>
+                    <p>Placement Rate</p>
+                  </div>
+                </div>
+
+                <h3>Career Services</h3>
+                <div className="career-services-grid">
+                  <div className="service-card">
+                    <div className="service-icon">📝</div>
+                    <h4>Resume Building</h4>
+                    <p>Get expert help crafting an ATS-friendly cybersecurity resume that stands out</p>
+                    <button className="btn-secondary">Build Resume</button>
+                  </div>
+
+                  <div className="service-card">
+                    <div className="service-icon">🎤</div>
+                    <h4>Interview Preparation</h4>
+                    <p>Practice with mock interviews and get feedback from industry professionals</p>
+                    <button className="btn-secondary">Start Practice</button>
+                  </div>
+
+                  <div className="service-card">
+                    <div className="service-icon">🎯</div>
+                    <h4>Career Counseling</h4>
+                    <p>One-on-one sessions with career advisors to plan your cybersecurity path</p>
+                    <button className="btn-secondary">Book Session</button>
+                  </div>
+
+                  <div className="service-card">
+                    <div className="service-icon">🌐</div>
+                    <h4>LinkedIn Optimization</h4>
+                    <p>Optimize your LinkedIn profile to attract recruiters and opportunities</p>
+                    <button className="btn-secondary">Optimize Profile</button>
+                  </div>
+
+                  <div className="service-card">
+                    <div className="service-icon">📚</div>
+                    <h4>Portfolio Development</h4>
+                    <p>Build a professional portfolio showcasing your projects and skills</p>
+                    <button className="btn-secondary">Create Portfolio</button>
+                  </div>
+
+                  <div className="service-card">
+                    <div className="service-icon">🤝</div>
+                    <h4>Networking Events</h4>
+                    <p>Connect with industry professionals at exclusive networking events</p>
+                    <button className="btn-secondary">View Events</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeSection === 'mentorship' && (
+            <div className="section">
+              <div className="section-header">
+                <h2>Mentorship Program</h2>
+                <p className="section-subtitle">Learn from experienced cybersecurity professionals</p>
+              </div>
+
+              {/* Mentors Grid */}
+              <div className="mentorship-section">
+                <h3>Available Mentors</h3>
+                <div className="mentors-grid">
+                  <div className="mentor-card">
+                    <div className="mentor-avatar">👨‍💻</div>
+                    <h4>John Smith</h4>
+                    <p className="mentor-title">Senior Penetration Tester</p>
+                    <p className="mentor-company">Google | 12 years exp</p>
+                    <div className="mentor-skills">
+                      <span className="skill-tag">Pentesting</span>
+                      <span className="skill-tag">Web Security</span>
+                      <span className="skill-tag">Network Security</span>
+                    </div>
+                    <p className="mentor-desc">Specialized in web application security and penetration testing</p>
+                    <button className="btn-primary">Request Mentorship</button>
+                  </div>
+
+                  <div className="mentor-card">
+                    <div className="mentor-avatar">👩‍💻</div>
+                    <h4>Sarah Johnson</h4>
+                    <p className="mentor-title">Security Architect</p>
+                    <p className="mentor-company">Microsoft | 10 years exp</p>
+                    <div className="mentor-skills">
+                      <span className="skill-tag">Cloud Security</span>
+                      <span className="skill-tag">IAM</span>
+                      <span className="skill-tag">Compliance</span>
+                    </div>
+                    <p className="mentor-desc">Expert in cloud security architecture and compliance frameworks</p>
+                    <button className="btn-primary">Request Mentorship</button>
+                  </div>
+
+                  <div className="mentor-card">
+                    <div className="mentor-avatar">👨‍💼</div>
+                    <h4>Michael Chen</h4>
+                    <p className="mentor-title">Red Team Lead</p>
+                    <p className="mentor-company">Amazon | 8 years exp</p>
+                    <div className="mentor-skills">
+                      <span className="skill-tag">Red Teaming</span>
+                      <span className="skill-tag">OSINT</span>
+                      <span className="skill-tag">Social Engineering</span>
+                    </div>
+                    <p className="mentor-desc">Leads red team operations and advanced threat simulations</p>
+                    <button className="btn-primary">Request Mentorship</button>
+                  </div>
+
+                  <div className="mentor-card">
+                    <div className="mentor-avatar">👩‍🔬</div>
+                    <h4>Emily Davis</h4>
+                    <p className="mentor-title">Malware Analyst</p>
+                    <p className="mentor-company">CrowdStrike | 9 years exp</p>
+                    <div className="mentor-skills">
+                      <span className="skill-tag">Malware Analysis</span>
+                      <span className="skill-tag">Reverse Engineering</span>
+                      <span className="skill-tag">Threat Intel</span>
+                    </div>
+                    <p className="mentor-desc">Specializes in advanced malware analysis and threat intelligence</p>
+                    <button className="btn-primary">Request Mentorship</button>
+                  </div>
+
+                  <div className="mentor-card">
+                    <div className="mentor-avatar">👨‍🏫</div>
+                    <h4>David Martinez</h4>
+                    <p className="mentor-title">Security Consultant</p>
+                    <p className="mentor-company">Deloitte | 15 years exp</p>
+                    <div className="mentor-skills">
+                      <span className="skill-tag">GRC</span>
+                      <span className="skill-tag">Risk Management</span>
+                      <span className="skill-tag">Auditing</span>
+                    </div>
+                    <p className="mentor-desc">Expert in governance, risk, and compliance strategies</p>
+                    <button className="btn-primary">Request Mentorship</button>
+                  </div>
+
+                  <div className="mentor-card">
+                    <div className="mentor-avatar">👩‍⚖️</div>
+                    <h4>Lisa Anderson</h4>
+                    <p className="mentor-title">Incident Response Lead</p>
+                    <p className="mentor-company">FireEye | 11 years exp</p>
+                    <div className="mentor-skills">
+                      <span className="skill-tag">Incident Response</span>
+                      <span className="skill-tag">Forensics</span>
+                      <span className="skill-tag">SIEM</span>
+                    </div>
+                    <p className="mentor-desc">Leads incident response teams and digital forensics investigations</p>
+                    <button className="btn-primary">Request Mentorship</button>
+                  </div>
+                </div>
+
+                <div className="mentorship-benefits">
+                  <h3>Mentorship Benefits</h3>
+                  <div className="benefits-grid">
+                    <div className="benefit-item">
+                      <span className="benefit-icon">🎯</span>
+                      <p>Personalized career guidance</p>
+                    </div>
+                    <div className="benefit-item">
+                      <span className="benefit-icon">💡</span>
+                      <p>Industry insights and trends</p>
+                    </div>
+                    <div className="benefit-item">
+                      <span className="benefit-icon">🔍</span>
+                      <p>Code and project reviews</p>
+                    </div>
+                    <div className="benefit-item">
+                      <span className="benefit-icon">🤝</span>
+                      <p>Networking opportunities</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeSection === 'jobboard' && (
+            <div className="section">
+              <div className="section-header">
+                <h2>Job Board</h2>
+                <p className="section-subtitle">Find your dream cybersecurity job</p>
+              </div>
+
+              {/* Job Filters */}
+              <div className="job-filters">
+                <input type="text" placeholder="Search jobs..." className="search-input" />
+                <select className="filter-select">
+                  <option>All Locations</option>
+                  <option>Remote</option>
+                  <option>On-site</option>
+                  <option>Hybrid</option>
+                </select>
+                <select className="filter-select">
+                  <option>All Experience Levels</option>
+                  <option>Entry Level</option>
+                  <option>Mid Level</option>
+                  <option>Senior Level</option>
+                </select>
+                <select className="filter-select">
+                  <option>All Job Types</option>
+                  <option>Full-time</option>
+                  <option>Part-time</option>
+                  <option>Contract</option>
+                </select>
+              </div>
+
+              {/* Job Listings */}
+              <div className="jobs-section">
+                <div className="job-card">
+                  <div className="job-header">
+                    <div className="company-logo">🏢</div>
+                    <div className="job-title-section">
+                      <h4>Penetration Tester</h4>
+                      <p className="company-name">Google</p>
+                    </div>
+                    <span className="job-badge new">New</span>
+                  </div>
+                  <div className="job-details">
+                    <span className="job-detail">📍 Remote</span>
+                    <span className="job-detail">💰 $95K - $130K</span>
+                    <span className="job-detail">⏱️ Full-time</span>
+                    <span className="job-detail">📅 Posted 2 days ago</span>
+                  </div>
+                  <p className="job-description">
+                    We're seeking an experienced penetration tester to join our security team. You'll conduct security assessments and help protect our infrastructure.
+                  </p>
+                  <div className="job-skills">
+                    <span className="skill-tag">Pentesting</span>
+                    <span className="skill-tag">Kali Linux</span>
+                    <span className="skill-tag">Burp Suite</span>
+                    <span className="skill-tag">Python</span>
+                  </div>
+                  <button className="btn-primary">Apply Now</button>
+                </div>
+
+                <div className="job-card">
+                  <div className="job-header">
+                    <div className="company-logo">🏢</div>
+                    <div className="job-title-section">
+                      <h4>Security Analyst</h4>
+                      <p className="company-name">Microsoft</p>
+                    </div>
+                    <span className="job-badge">Featured</span>
+                  </div>
+                  <div className="job-details">
+                    <span className="job-detail">📍 Seattle, WA</span>
+                    <span className="job-detail">💰 $80K - $110K</span>
+                    <span className="job-detail">⏱️ Full-time</span>
+                    <span className="job-detail">📅 Posted 5 days ago</span>
+                  </div>
+                  <p className="job-description">
+                    Join our security operations center and monitor threats, investigate incidents, and implement security controls.
+                  </p>
+                  <div className="job-skills">
+                    <span className="skill-tag">SIEM</span>
+                    <span className="skill-tag">Incident Response</span>
+                    <span className="skill-tag">Threat Analysis</span>
+                    <span className="skill-tag">Splunk</span>
+                  </div>
+                  <button className="btn-primary">Apply Now</button>
+                </div>
+
+                <div className="job-card">
+                  <div className="job-header">
+                    <div className="company-logo">🏢</div>
+                    <div className="job-title-section">
+                      <h4>Cloud Security Engineer</h4>
+                      <p className="company-name">Amazon Web Services</p>
+                    </div>
+                    <span className="job-badge new">New</span>
+                  </div>
+                  <div className="job-details">
+                    <span className="job-detail">📍 Remote</span>
+                    <span className="job-detail">💰 $110K - $150K</span>
+                    <span className="job-detail">⏱️ Full-time</span>
+                    <span className="job-detail">📅 Posted 1 day ago</span>
+                  </div>
+                  <p className="job-description">
+                    Design and implement security solutions for cloud infrastructure. Experience with AWS security services required.
+                  </p>
+                  <div className="job-skills">
+                    <span className="skill-tag">AWS</span>
+                    <span className="skill-tag">Cloud Security</span>
+                    <span className="skill-tag">IAM</span>
+                    <span className="skill-tag">Terraform</span>
+                  </div>
+                  <button className="btn-primary">Apply Now</button>
+                </div>
+
+                <div className="job-card">
+                  <div className="job-header">
+                    <div className="company-logo">🏢</div>
+                    <div className="job-title-section">
+                      <h4>Cybersecurity Consultant</h4>
+                      <p className="company-name">Deloitte</p>
+                    </div>
+                  </div>
+                  <div className="job-details">
+                    <span className="job-detail">📍 New York, NY</span>
+                    <span className="job-detail">💰 $90K - $125K</span>
+                    <span className="job-detail">⏱️ Full-time</span>
+                    <span className="job-detail">📅 Posted 1 week ago</span>
+                  </div>
+                  <p className="job-description">
+                    Work with clients to assess security posture, develop strategies, and implement security frameworks and controls.
+                  </p>
+                  <div className="job-skills">
+                    <span className="skill-tag">GRC</span>
+                    <span className="skill-tag">Risk Assessment</span>
+                    <span className="skill-tag">NIST</span>
+                    <span className="skill-tag">ISO 27001</span>
+                  </div>
+                  <button className="btn-primary">Apply Now</button>
+                </div>
+
+                <div className="job-card">
+                  <div className="job-header">
+                    <div className="company-logo">🏢</div>
+                    <div className="job-title-section">
+                      <h4>Malware Analyst</h4>
+                      <p className="company-name">CrowdStrike</p>
+                    </div>
+                    <span className="job-badge">Featured</span>
+                  </div>
+                  <div className="job-details">
+                    <span className="job-detail">📍 Remote</span>
+                    <span className="job-detail">💰 $100K - $140K</span>
+                    <span className="job-detail">⏱️ Full-time</span>
+                    <span className="job-detail">📅 Posted 3 days ago</span>
+                  </div>
+                  <p className="job-description">
+                    Analyze malware samples, reverse engineer threats, and develop detection signatures for our threat intelligence platform.
+                  </p>
+                  <div className="job-skills">
+                    <span className="skill-tag">Reverse Engineering</span>
+                    <span className="skill-tag">IDA Pro</span>
+                    <span className="skill-tag">Assembly</span>
+                    <span className="skill-tag">Malware Analysis</span>
+                  </div>
+                  <button className="btn-primary">Apply Now</button>
+                </div>
+
+                <div className="job-card">
+                  <div className="job-header">
+                    <div className="company-logo">🏢</div>
+                    <div className="job-title-section">
+                      <h4>Application Security Engineer</h4>
+                      <p className="company-name">Facebook (Meta)</p>
+                    </div>
+                  </div>
+                  <div className="job-details">
+                    <span className="job-detail">📍 Menlo Park, CA</span>
+                    <span className="job-detail">💰 $120K - $160K</span>
+                    <span className="job-detail">⏱️ Full-time</span>
+                    <span className="job-detail">📅 Posted 4 days ago</span>
+                  </div>
+                  <p className="job-description">
+                    Secure our applications by conducting code reviews, security testing, and implementing secure development practices.
+                  </p>
+                  <div className="job-skills">
+                    <span className="skill-tag">AppSec</span>
+                    <span className="skill-tag">SAST/DAST</span>
+                    <span className="skill-tag">OWASP</span>
+                    <span className="skill-tag">Secure Coding</span>
+                  </div>
+                  <button className="btn-primary">Apply Now</button>
+                </div>
               </div>
             </div>
           )}
@@ -913,6 +1519,45 @@ const Dashboard = ({ user, onLogout }) => {
               <button className="btn-close" onClick={() => setShowProfileModal(false)}>Close</button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Help Button */}
+      <button 
+        className="help-button"
+        onClick={() => setShowHelpMenu(!showHelpMenu)}
+        title="Help"
+      >
+        <span className="help-icon">?</span>
+        <span className="help-text">Help</span>
+      </button>
+
+      {/* Help Menu Popup */}
+      {showHelpMenu && (
+        <div className="help-menu">
+          <button className="help-menu-item" onClick={() => alert('Live Support coming soon!')}>
+            <span className="help-menu-icon">💬</span>
+            <span>Live Support</span>
+          </button>
+          <button className="help-menu-item" onClick={() => alert('Resources coming soon!')}>
+            <span className="help-menu-icon">📚</span>
+            <span>Resources</span>
+          </button>
+          <button className="help-menu-item" onClick={() => alert('Raise a ticket coming soon!')}>
+            <span className="help-menu-icon">🎫</span>
+            <span>Raise a ticket</span>
+          </button>
+          <button className="help-menu-item" onClick={() => alert('AI Chat coming soon!')}>
+            <span className="help-menu-icon">🤖</span>
+            <span>AI Chat</span>
+          </button>
+          <button 
+            className="help-menu-close"
+            onClick={() => setShowHelpMenu(false)}
+            title="Close"
+          >
+            ✕
+          </button>
         </div>
       )}
     </div>
