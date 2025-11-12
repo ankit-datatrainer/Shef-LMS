@@ -25,6 +25,7 @@ const AdminDashboard = ({ user, onLogout }) => {
   const [modalType, setModalType] = useState('');
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     loadAllData();
@@ -53,17 +54,17 @@ const AdminDashboard = ({ user, onLogout }) => {
         firebaseService.getAll(COLLECTIONS.MENTORS)
       ]);
 
-      if (studentsRes.success) setStudents(studentsRes.data);
-      if (coursesRes.success) setCourses(coursesRes.data);
-      if (modulesRes.success) setModules(modulesRes.data);
-      if (lessonsRes.success) setLessons(lessonsRes.data);
-      if (projectsRes.success) setProjects(projectsRes.data);
-      if (assessmentsRes.success) setAssessments(assessmentsRes.data);
-      if (jobsRes.success) setJobs(jobsRes.data);
-      if (mentorsRes.success) setMentors(mentorsRes.data);
+      if (studentsRes.success) setStudents(studentsRes.data); else setStudents([]);
+      if (coursesRes.success) setCourses(coursesRes.data); else setCourses([]);
+      if (modulesRes.success) setModules(modulesRes.data); else setModules([]);
+      if (lessonsRes.success) setLessons(lessonsRes.data); else setLessons([]);
+      if (projectsRes.success) setProjects(projectsRes.data); else setProjects([]);
+      if (assessmentsRes.success) setAssessments(assessmentsRes.data); else setAssessments([]);
+      if (jobsRes.success) setJobs(jobsRes.data); else setJobs([]);
+      if (mentorsRes.success) setMentors(mentorsRes.data); else setMentors([]);
 
-      // Calculate stats
-      calculateStats(studentsRes.data, coursesRes.data, jobsRes.data);
+      // Calculate stats using safe fallbacks
+      calculateStats(studentsRes.success ? studentsRes.data : [], coursesRes.success ? coursesRes.data : [], jobsRes.success ? jobsRes.data : []);
     } catch (error) {
       console.error('Error loading admin data:', error);
     } finally {
@@ -107,7 +108,7 @@ const AdminDashboard = ({ user, onLogout }) => {
       student: { name: '', email: '', password: '', enrollmentNumber: '', course: '', status: 'active', role: 'student', phone: '', address: '' },
       course: { title: '', description: '', duration: '', modules: 0, status: 'active', instructor: '', price: '' },
       module: { name: '', courseId: '', description: '', duration: '', lessons: 0, order: 1 },
-      lesson: { title: '', moduleId: '', content: '', duration: '', videoUrl: '', order: 1, resources: '' },
+  lesson: { title: '', moduleId: '', content: '', duration: '', videoUrl: '', classLink: '', order: 1, resources: '' },
       project: { title: '', description: '', difficulty: 'Intermediate', duration: '', skills: [], requirements: '', deliverables: '' },
       assessment: { title: '', description: '', questions: 0, duration: '', difficulty: 'Medium', passingScore: 70 },
       job: { title: '', company: '', location: 'Remote', salary: '', type: 'Full-time', status: 'active', skills: [], description: '' },
@@ -119,6 +120,7 @@ const AdminDashboard = ({ user, onLogout }) => {
 
   const handleSave = async () => {
     try {
+      setSaving(true);
       // Validate required fields
       if (modalType === 'student') {
         if (!formData.name || !formData.email || (!editingItem && !formData.password) || !formData.enrollmentNumber) {
@@ -159,7 +161,7 @@ const AdminDashboard = ({ user, onLogout }) => {
             if (result.success) {
               alert('✅ Student created successfully!\n\nLogin Credentials:\nEmail: ' + formData.email + '\nPassword: ' + formData.password + '\n\nThey can now login to the student dashboard!');
               closeModal();
-              loadAllData();
+              await loadAllData();
             } else {
               alert('Error: ' + result.error);
             }
@@ -187,7 +189,7 @@ const AdminDashboard = ({ user, onLogout }) => {
           if (result.success) {
             alert('Student updated successfully!');
             closeModal();
-            loadAllData();
+            await loadAllData();
           } else {
             alert('Error: ' + result.error);
           }
@@ -257,13 +259,16 @@ const AdminDashboard = ({ user, onLogout }) => {
       if (result.success) {
         alert(editingItem ? 'Updated successfully!' : 'Created successfully!');
         closeModal();
-        loadAllData();
+        await loadAllData();
       } else {
         alert('Error: ' + result.error);
       }
     } catch (error) {
       console.error('Error saving:', error);
       alert('Failed to save data: ' + error.message);
+    }
+    finally {
+      setSaving(false);
     }
   };
 
@@ -298,8 +303,7 @@ const AdminDashboard = ({ user, onLogout }) => {
       <aside className={`admin-sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
         <div className="sidebar-header">
           <div className="logo">
-            <span className="logo-icon">⚡</span>
-            <h2>ADMIN PANEL</h2>
+            <img src="/Shef_logo.png" alt="SHEF" className="logo-image" />
           </div>
           <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
             ☰
@@ -394,12 +398,24 @@ const AdminDashboard = ({ user, onLogout }) => {
         </div>
       </aside>
 
+      <div
+        className={`admin-sidebar-overlay ${sidebarOpen ? 'visible' : ''}`}
+        onClick={() => setSidebarOpen(false)}
+      ></div>
+
       {/* Main Content */}
-      <main className="admin-main-content">
+      <main className={`admin-main-content ${sidebarOpen ? 'sidebar-open' : 'sidebar-collapsed'}`}>
         {/* Top Header */}
         <header className="admin-top-header">
           <div className="header-left">
-            <h1>Super Admin Dashboard</h1>
+            <button
+              className="mobile-menu-btn"
+              onClick={() => setSidebarOpen(prev => !prev)}
+              aria-label="Toggle navigation"
+            >
+              ☰
+            </button>
+            <img src="/Shef_logo.png" alt="SHEF" className="header-logo" />
           </div>
           <div className="header-right">
             <div className="user-menu">
@@ -671,6 +687,7 @@ const AdminDashboard = ({ user, onLogout }) => {
                       <th>Module</th>
                       <th>Duration</th>
                       <th>Order</th>
+                      <th>Class</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -681,6 +698,13 @@ const AdminDashboard = ({ user, onLogout }) => {
                         <td>{modules.find(m => m.id === lesson.moduleId)?.name || 'N/A'}</td>
                         <td>{lesson.duration}</td>
                         <td>{lesson.order}</td>
+                        <td>
+                          {lesson.classLink ? (
+                            <a href={lesson.classLink} target="_blank" rel="noopener noreferrer" className="btn-join">Join</a>
+                          ) : (
+                            <span className="no-class">—</span>
+                          )}
+                        </td>
                         <td>
                           <button onClick={() => openModal('lesson', lesson)} className="btn-edit">✏️</button>
                           <button onClick={() => handleDelete(COLLECTIONS.LESSONS, lesson.id)} className="btn-delete">🗑️</button>
@@ -1131,6 +1155,12 @@ const AdminDashboard = ({ user, onLogout }) => {
                     value={formData.videoUrl || ''}
                     onChange={(e) => handleInputChange('videoUrl', e.target.value)}
                   />
+                  <input
+                    type="url"
+                    placeholder="Class Link (Zoom / Google Meet)"
+                    value={formData.classLink || ''}
+                    onChange={(e) => handleInputChange('classLink', e.target.value)}
+                  />
                   <textarea
                     placeholder="Additional Resources (links, PDFs, etc.)"
                     value={formData.resources || ''}
@@ -1408,10 +1438,10 @@ const AdminDashboard = ({ user, onLogout }) => {
             </div>
 
             <div className="modal-actions">
-              <button onClick={handleSave} className="btn-save">
-                {editingItem ? 'Update' : 'Create'}
+              <button onClick={handleSave} className="btn-save" disabled={saving}>
+                {saving ? (editingItem ? 'Updating...' : 'Creating...') : (editingItem ? 'Update' : 'Create')}
               </button>
-              <button onClick={closeModal} className="btn-cancel">Cancel</button>
+              <button onClick={closeModal} className="btn-cancel" disabled={saving}>Cancel</button>
             </div>
           </div>
         </div>

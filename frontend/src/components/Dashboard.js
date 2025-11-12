@@ -9,6 +9,7 @@ const Dashboard = ({ user, onLogout }) => {
   const [projects, setProjects] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [mentors, setMentors] = useState([]);
+  const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -314,6 +315,19 @@ const Dashboard = ({ user, onLogout }) => {
 
   useEffect(() => {
     fetchDashboardData();
+    
+    // Handle responsive sidebar
+    const handleResize = () => {
+      if (window.innerWidth <= 1024) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(true);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Call on mount
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const fetchDashboardData = async () => {
@@ -375,6 +389,7 @@ const Dashboard = ({ user, onLogout }) => {
 
       setStats(calculatedStats);
       setCourses(mappedCourses);
+  setLessons(lessonsData);
       setActivities(recentActivities);
       setProjects(projectsData);
       setJobs(jobsData.filter(j => j.status === 'active'));
@@ -427,8 +442,7 @@ const Dashboard = ({ user, onLogout }) => {
       <aside className={`sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
         <div className="sidebar-header">
           <div className="logo">
-            <span className="logo-icon">📚</span>
-            <h2>SHEF LMS</h2>
+            <img src="/Shef_logo.png" alt="SHEF" className="logo-image" />
           </div>
           <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
             ☰
@@ -438,7 +452,7 @@ const Dashboard = ({ user, onLogout }) => {
         <nav className="sidebar-nav">
           <button 
             className={`nav-item ${activeSection === 'overview' ? 'active' : ''}`}
-            onClick={() => setActiveSection('overview')}
+            onClick={() => { setActiveSection('overview'); if (window.innerWidth <= 1024) setSidebarOpen(false); }}
             title="Home"
           >
             <span className="icon">🏠</span>
@@ -446,7 +460,7 @@ const Dashboard = ({ user, onLogout }) => {
           </button>
           <button 
             className={`nav-item ${activeSection === 'courses' ? 'active' : ''}`}
-            onClick={() => setActiveSection('courses')}
+            onClick={() => { setActiveSection('courses'); if (window.innerWidth <= 1024) setSidebarOpen(false); }}
             title="Learn"
           >
             <span className="icon">📖</span>
@@ -454,7 +468,7 @@ const Dashboard = ({ user, onLogout }) => {
           </button>
           <button 
             className={`nav-item ${activeSection === 'activity' ? 'active' : ''}`}
-            onClick={() => setActiveSection('activity')}
+            onClick={() => { setActiveSection('activity'); if (window.innerWidth <= 1024) setSidebarOpen(false); }}
             title="Practice"
           >
             <span className="icon">✏️</span>
@@ -462,7 +476,7 @@ const Dashboard = ({ user, onLogout }) => {
           </button>
           <button 
             className={`nav-item ${activeSection === 'projects' ? 'active' : ''}`}
-            onClick={() => setActiveSection('projects')}
+            onClick={() => { setActiveSection('projects'); if (window.innerWidth <= 1024) setSidebarOpen(false); }}
             title="Projects"
           >
             <span className="icon">📁</span>
@@ -470,7 +484,7 @@ const Dashboard = ({ user, onLogout }) => {
           </button>
           <button 
             className={`nav-item ${activeSection === 'career' ? 'active' : ''}`}
-            onClick={() => setActiveSection('career')}
+            onClick={() => { setActiveSection('career'); if (window.innerWidth <= 1024) setSidebarOpen(false); }}
             title="Career"
           >
             <span className="icon">🎯</span>
@@ -478,7 +492,7 @@ const Dashboard = ({ user, onLogout }) => {
           </button>
           <button 
             className={`nav-item ${activeSection === 'mentorship' ? 'active' : ''}`}
-            onClick={() => setActiveSection('mentorship')}
+            onClick={() => { setActiveSection('mentorship'); if (window.innerWidth <= 1024) setSidebarOpen(false); }}
             title="Mentorship"
           >
             <span className="icon">👨‍🏫</span>
@@ -486,7 +500,7 @@ const Dashboard = ({ user, onLogout }) => {
           </button>
           <button 
             className={`nav-item ${activeSection === 'jobboard' ? 'active' : ''}`}
-            onClick={() => setActiveSection('jobboard')}
+            onClick={() => { setActiveSection('jobboard'); if (window.innerWidth <= 1024) setSidebarOpen(false); }}
             title="Job Board"
           >
             <span className="icon">💼</span>
@@ -502,12 +516,24 @@ const Dashboard = ({ user, onLogout }) => {
         </div>
       </aside>
 
+      <div
+        className={`sidebar-overlay ${sidebarOpen ? 'visible' : ''}`}
+        onClick={() => setSidebarOpen(false)}
+      ></div>
+
       {/* Main Content */}
-      <main className="main-content">
+      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : 'sidebar-collapsed'}`}>
         {/* Top Header */}
         <header className="top-header">
           <div className="header-left">
-            <h1>My Goal | Professional Certification in...</h1>
+            <button
+              className="dashboard-menu-btn"
+              onClick={() => setSidebarOpen(prev => !prev)}
+              aria-label="Toggle navigation"
+            >
+              ☰
+            </button>
+            <img src="/Shef_logo.png" alt="SHEF" className="header-logo" />
           </div>
           <div className="header-right">
             <div className="user-menu">
@@ -592,7 +618,24 @@ const Dashboard = ({ user, onLogout }) => {
                     <button className="btn-small">View Classroom</button>
                   </div>
                   <div className="upcoming-classes">
-                    <h4>📅 No upcoming class scheduled</h4>
+                      <h4>📅 Upcoming Live Classes</h4>
+                      <div className="classes-list">
+                        {/* Show next 3 lessons that have a classLink */}
+                        {lessons && lessons.filter(l => l.classLink).slice(0,3).map((lesson) => (
+                          <div key={lesson.id} className="class-item">
+                            <div className="class-info">
+                              <strong>{lesson.title}</strong>
+                              <div className="class-meta">{lesson.duration || 'TBD'}</div>
+                            </div>
+                            <div className="class-actions">
+                              <a href={lesson.classLink} target="_blank" rel="noopener noreferrer" className="btn-join">Join class</a>
+                            </div>
+                          </div>
+                        ))}
+                        {!lessons || lessons.filter(l => l.classLink).length === 0 ? (
+                          <p>No upcoming live classes scheduled.</p>
+                        ) : null}
+                      </div>
                   </div>
                 </div>
               </div>

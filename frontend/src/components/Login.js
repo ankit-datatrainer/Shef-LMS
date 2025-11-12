@@ -42,8 +42,7 @@ const Login = ({ onLogin }) => {
       <div className="login-card">
         <div className="login-header">
           <div className="logo">
-            <div className="logo-icon">📚</div>
-            <h1>SHEF LMS</h1>
+            <img src="/Shef_logo.png" alt="SHEF" className="login-logo" />
           </div>
           <h2>Welcome Back! 👋</h2>
           <p>Sign in to continue your learning journey</p>
