@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { detectUserIP } from '../utils/ipDetector';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
@@ -9,8 +10,22 @@ const Login = ({ onLogin }) => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [ipData, setIpData] = useState(null);
 
   const { email, password } = formData;
+
+  // Detect IP address when component mounts
+  useEffect(() => {
+    const fetchIP = async () => {
+      try {
+        const data = await detectUserIP();
+        setIpData(data);
+      } catch (error) {
+        console.error('Failed to detect IP:', error);
+      }
+    };
+    fetchIP();
+  }, []);
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,7 +37,19 @@ const Login = ({ onLogin }) => {
     setLoading(true);
 
     try {
-      const res = await axios.post('/api/auth/login', formData);
+      // Send login data with IP information
+      const loginData = {
+        ...formData,
+        ipAddress: ipData?.ip || 'Unknown',
+        ipDetails: ipData ? {
+          city: ipData.city,
+          country: ipData.country,
+          isp: ipData.isp,
+          timezone: ipData.timezone
+        } : null
+      };
+
+      const res = await axios.post('/api/auth/login', loginData);
       onLogin(res.data.token, res.data.user);
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');

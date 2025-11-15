@@ -23,6 +23,29 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course'
   }],
+  // IP Address tracking fields
+  lastLoginIP: {
+    type: String,
+    default: null
+  },
+  lastLoginTimestamp: {
+    type: Date,
+    default: null
+  },
+  lastLogin: {
+    timestamp: String,
+    ipAddress: String,
+    city: String,
+    country: String,
+    isp: String
+  },
+  loginHistory: [{
+    timestamp: Date,
+    ipAddress: String,
+    city: String,
+    country: String,
+    isp: String
+  }],
   createdAt: {
     type: Date,
     default: Date.now

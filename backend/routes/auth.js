@@ -62,7 +62,24 @@ router.post('/register', async (req, res) => {
 // @desc    Login user
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, ipAddress, ipDetails } = req.body;
+
+    // Get IP from request headers as fallback
+    const clientIP = ipAddress || 
+                     req.headers['x-forwarded-for'] || 
+                     req.headers['x-real-ip'] || 
+                     req.connection.remoteAddress || 
+                     req.socket.remoteAddress ||
+                     'Unknown';
+
+    // Store login timestamp and IP
+    const loginInfo = {
+      timestamp: new Date().toISOString(),
+      ipAddress: clientIP,
+      city: ipDetails?.city || 'Unknown',
+      country: ipDetails?.country || 'Unknown',
+      isp: ipDetails?.isp || 'Unknown'
+    };
 
     // Check for demo student credentials
     if (email === 'lqdeleon@gmail.com' && password === 'Admin@123') {
@@ -74,7 +91,8 @@ router.post('/login', async (req, res) => {
         enrollmentDate: '2025-11-07',
         enrollmentNumber: 'SU-2025-001',
         currentCourse: 'Cyber Security & Ethical Hacking',
-        courseDuration: '6 months'
+        courseDuration: '6 months',
+        lastLogin: loginInfo
       };
 
       const payload = { user: demoUser };
@@ -93,7 +111,8 @@ router.post('/login', async (req, res) => {
         id: 'super_admin_user_id',
         name: 'Super Admin',
         email: 'admin@sheflms.com',
-        role: 'admin'
+        role: 'admin',
+        lastLogin: loginInfo
       };
 
       const payload = { user: adminUser };
@@ -125,12 +144,20 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
+    // Update user's last login info in Firestore
+    await db.collection('users').doc(userId).update({
+      lastLogin: loginInfo,
+      lastLoginIP: clientIP,
+      lastLoginTimestamp: new Date().toISOString()
+    });
+
     const payload = {
       user: {
         id: userId,
         name: userData.name,
         email: userData.email,
-        role: userData.role
+        role: userData.role,
+        lastLogin: loginInfo
       }
     };
 
